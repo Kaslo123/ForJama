@@ -41,20 +41,47 @@
     }
 
     .card {
-      width: min(720px, 92vw);
+      width: 60vw;
       padding: 26px 22px;
       background: var(--card);
       backdrop-filter: blur(10px);
       border-radius: 22px;
       text-align: center;
       box-shadow: 0 18px 60px rgba(0,0,0,.15);
+    }    
+    
+    #cuteCat {
+      width: 120px;
+      border-radius: 22px;
+      text-align: center;
+      color:#ff1f68;
+      }
+
+  #cuteCat .st0 {
+      fill: #DDA4B4; 
+  }
+
+  #cuteCat .st1 {
+      fill: #3B2D2A; 
+  }
+
+    #cuteCat:hover .st0 {
+        fill: #d88ac7; 
     }
 
+    #cuteCat:active {
+      transform: scale(0.8, 1.2); /* Squishes it vertically */
+      transition: transform 0.1s;
+    } 
+
     .art {
-      width: min(260px, 80vw);
-      margin: 0 auto 10px;
-      display: block;
-      filter: drop-shadow(0 10px 14px rgba(0,0,0,.12));
+
+  width: 20px; 
+  height:20px;
+  position: relative;
+  margin: 0 5px;
+  opacity: 100;
+  overflow: visible;
     }
 
     h1 {
@@ -101,8 +128,8 @@
 
     .hint {
       margin-top: 10px;
-      font-size: 13px;
-      opacity: .7;
+      font-size: 20px;
+      opacity: 1;
     }
 
     .result {
@@ -126,6 +153,38 @@
       from { transform: scale(.96); opacity: 0; }
       to { transform: scale(1); opacity: 1; }
     }
+
+    @keyframes floatUp {
+  from { 
+    opacity: 0;
+    transform: translateY(20px) scale(0.95);
+  }
+  to { 
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.valentineStyle{
+  color: #ff3b7a;
+  font-family: 'cursive', sans-serif;
+}
+
+.emoji {
+  /* You can make the emoji bounce separately! */
+  display: inline-block;
+}
+
+.emoji:hover{
+  animation: heartBeat 1.5s infinite;
+
+}
+
+@keyframes heartBeat {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.2); }
+  100% { transform: scale(1); }
+}
   </style>
 </head>
 
@@ -133,45 +192,11 @@
   <canvas id="confettiCanvas"></canvas>
 
   <main class="card">
-    <!-- ANIMAL WITH HEART -->
-    <svg class="art" viewBox="0 0 320 240" xmlns="http://www.w3.org/2000/svg">
-      <defs>
-        <linearGradient id="fur" x1="0" x2="1">
-          <stop offset="0" stop-color="#f7c7a1"/>
-          <stop offset="1" stop-color="#f2a97b"/>
-        </linearGradient>
-        <linearGradient id="heart" x1="0" x2="1">
-          <stop offset="0" stop-color="#ff4d7d"/>
-          <stop offset="1" stop-color="#ff1f68"/>
-        </linearGradient>
-      </defs>
+    <svg id="cuteCat" >
+  <use href="assets/svg/valentines-day-cute-kitty.svg#cuteCat"></use>
+</svg>
 
-      <path d="M250 50 C250 33 270 25 282 38
-               C294 25 314 33 314 50
-               C314 78 282 92 282 106
-               C282 92 250 78 250 50Z"
-            fill="url(#heart)"/>
-
-      <path d="M90 120 C90 70 140 40 190 60
-               C240 40 290 70 290 120
-               C290 180 240 210 190 210
-               C140 210 90 180 90 120Z"
-            fill="url(#fur)"/>
-
-      <path d="M110 92 L95 55 L140 78 Z" fill="#f2a97b"/>
-      <path d="M270 92 L285 55 L240 78 Z" fill="#f2a97b"/>
-
-      <circle cx="160" cy="130" r="8"/>
-      <circle cx="220" cy="130" r="8"/>
-
-      <path d="M190 144 C186 144 182 148 182 152
-               C182 160 190 164 190 170
-               C190 164 198 160 198 152
-               C198 148 194 144 190 144Z"
-            fill="#ff7aa2"/>
-    </svg>
-
-    <h1>nirali will you be my valentine?</h1>
+    <h1 class="valentineStyle">Jama, will you be my valentine? <span class="emoji">&#128519;</span></h1>
 
     <section class="button-zone" id="zone">
       <button id="yesBtn">Yes</button>
@@ -179,13 +204,55 @@
     </section>
 
     <!-- HINT -->
-    <div class="hint" id="hint">“No” seems a bit shy 😈</div>
+    <div class="hint" id="hint"
+      ><p> Choose wisely!  
+        <svg class="art" id="cute-custom-emoji" viewBox="100 80 50 75" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+          <defs>
+            <linearGradient id="fur" x1="0" x2="1">
+              <stop offset="0" stop-color="#f7c7a1"/>
+              <stop offset="1" stop-color="#f2a97b"/>
+            </linearGradient>
+            <linearGradient id="heart" x1="0" x2="1">
+              <stop offset="0" stop-color="#ff4d7d"/>
+              <stop offset="1" stop-color="#ff1f68"/>
+            </linearGradient>
+          </defs>
+
+         <a xlink:href="https://www.youtube.com/watch?v=K7XHy8nppf4">
+          <path d="M250 50 C250 33 270 25 282 38
+                  C294 25 314 33 314 50
+                  C314 78 282 92 282 106
+                  C282 92 250 78 250 50Z"
+                fill="url(#heart)"/>
+         </a>
+
+          <path d="M90 120 C90 70 140 40 190 60
+                  C240 40 290 70 290 120
+                  C290 180 240 210 190 210
+                  C140 210 90 180 90 120Z"
+                fill="url(#fur)"/>
+
+          <path d="M110 92 L95 55 L140 78 Z" fill="#f2a97b"/>
+          <path d="M270 92 L285 55 L240 78 Z" fill="#f2a97b"/>
+
+          <circle cx="160" cy="130" r="8"/>
+          <circle cx="220" cy="130" r="8"/>
+        
+          <path id="randomImageSelector" d="M190 144 C186 144 182 148 182 152
+                  C182 160 190 164 190 170
+                  C190 164 198 160 198 152
+                  C198 148 194 144 190 144Z"
+                fill="#ff7aa2"/>
+        </svg>
+     </p>
+    </div>    <!-- ANIMAL WITH HEART -->
+   
 
     <section class="result" id="result">
-      <h2>YAY! 🎉</h2>
+      <h2 style="font-size:150%">My reaction: &#128522;</h2>
       <img
         class="fireworks"
-        src="https://media.giphy.com/media/26ufdipQqU2lhNA4g/giphy.gif"
+        src="https://media.giphy.com/media/v1.Y2lkPWVjZjA1ZTQ3cmczdzQ5Zzk4ZGZvbW84eTF0MG5pb21xdWtrdjZwdzZlbjg1cm1tNSZlcD12MV9naWZzX3NlYXJjaCZjdD1n/8h5OzMNmtVjlxe0BVI/giphy.gif"
         alt="Fireworks"
       />
     </section>
@@ -197,6 +264,63 @@
     const noBtn = document.getElementById("noBtn");
     const result = document.getElementById("result");
     const hint = document.getElementById("hint");
+    const randomImageSelector = document.getElementById("randomImageSelector");
+    const cuteCat = document.getElementById("cuteCat");
+
+    // 1. List your images manually here
+    const images = [
+      'MayITouchYou.jpg',
+      'StopLookingCute.jpg',
+      'mwhehehehe.jpg',
+      'yummy.jpg'
+    ];
+
+    const carelessWhisperSound = new Audio('assets/sounds/careless_whispers.mp3');
+    const meowSound = new Audio('assets/sounds/Meow.mp3');
+    const helloDarknessMyOldFriendSound = new Audio('assets/sounds/hellodarknessmyoldfriend.mp3')
+
+    function getPictureDisplayInnerHTML(imagePath) {
+      console.log(imagePath)
+      return `
+        <img 
+          id="valentineImage" 
+          src="${imagePath}" 
+          style="
+            max-width: 85%;
+            max-height: 85vh;
+            border-radius: 30px;
+            border: 3px solid #fff0f5;
+            box-shadow: 0 0 40px rgba(255, 105, 180, 0.6), 
+                        0 0 15px rgba(255, 255, 255, 0.4) inset;
+            animation: floatUp 0.3s ease-out;
+          "
+        >
+      `;
+    }
+
+  function selectRandomImage() {
+    const randomIndex = Math.floor(Math.random() * images.length);
+    const selectedImage = images[randomIndex];
+
+    const imagePath = `assets/images/${selectedImage}`;
+
+    const overlay = document.createElement('div');
+    overlay.style = "position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.8); display:flex; justify-content:center; align-items:center; z-index:1000;";
+    
+    overlay.innerHTML = getPictureDisplayInnerHTML(imagePath);
+    overlay.onclick = () => overlay.remove();
+    
+    document.body.appendChild(overlay);
+  }
+
+  function meow(){
+        meowSound.currentTime = 0;
+        meowSound.play();
+  }
+
+cuteCat.addEventListener("click", meow)
+
+randomImageSelector.addEventListener("click", selectRandomImage);
 
     /* ---------- CONFETTI ---------- */
     const confettiCanvas = document.getElementById("confettiCanvas");
@@ -209,6 +333,19 @@
       confettiCanvas.style.height = "100vh";
     }
 
+    carelessWhisperSound.loop = true;
+    const emoji = document.querySelector('.emoji');
+
+    emoji.addEventListener('mouseenter', () => {
+      carelessWhisperSound.playbackRate = 0.8 + Math.random() * 0.4; 
+      carelessWhisperSound.currentTime = 0;
+      carelessWhisperSound.play();
+    });
+
+    emoji.addEventListener('mouseleave', () => {
+        carelessWhisperSound.pause();
+    });
+
     resizeConfettiCanvas();
     window.addEventListener("resize", resizeConfettiCanvas);
     window.addEventListener("orientationchange", () => setTimeout(resizeConfettiCanvas, 150));
@@ -219,7 +356,7 @@
     });
 
     function fullScreenConfetti() {
-      const end = Date.now() + 1600;
+      const end = Date.now() + 2600;
 
       (function frame() {
         confettiInstance({
@@ -246,7 +383,7 @@
     /* ---------- YES BUTTON GROWS ---------- */
     let yesScale = 1;
     function growYes() {
-      yesScale = Math.min(2.2, yesScale + 0.1);
+      yesScale = Math.min(3, yesScale + 0.02);
       yesBtn.style.transform = `translateY(-50%) scale(${yesScale})`;
     }
 
@@ -287,16 +424,41 @@
       if (d < 140) moveNo(e.clientX, e.clientY);
     });
 
-    noBtn.addEventListener("click", e => e.preventDefault());
+    function thisIsReallyDissapointing(){
+    const imagePath = `assets/images/SadPenguin.jpg`;
+
+    const overlay = document.createElement('div');
+    overlay.style = "position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.8); display:flex; justify-content:center; align-items:center; z-index:1000;";
+    
+    overlay.innerHTML = getPictureDisplayInnerHTML(imagePath);
+    overlay.onclick = () => overlay.remove();
+    
+    document.body.appendChild(overlay);
+    helloDarknessMyOldFriendSound.currentTime = 0;
+    helloDarknessMyOldFriendSound.play();
+    yesScale = 1;
+    yesBtn.style.transform = `translateY(-50%) scale(${yesScale}})`;
+    }
+
+    noBtn.addEventListener("click", thisIsReallyDissapointing);
 
     /* ---------- YES CLICK ---------- */
     yesBtn.addEventListener("click", () => {
       zone.style.display = "none";
-      hint.style.display = "none";     // HIDE THE HINT
+      hint.style.display = "none";   
       result.style.display = "block";
       resizeConfettiCanvas();
       fullScreenConfetti();
+      
+      const loopDuration = Date.now() + 2 * 60 * 1000; //2 minutes
+      carelessWhisperSound.play();
+
+      setTimeout(() => {
+        carelessWhisperSound.loop = false;
+        carelessWhisperSound.pause();
+    }, loopDuration);
     });
+
   </script>
 </body>
 </html>
