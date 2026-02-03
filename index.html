@@ -193,7 +193,7 @@
 
   <main class="card">
     <svg id="cuteCat" >
-  <use href="assets/svg/valentines-day-cute-kitty.svg#cuteCat"></use>
+  <use href="./assets/svg/valentines-day-cute-kitty.svg#cuteCat"></use>
 </svg>
 
     <h1 class="valentineStyle">Jama, will you be my valentine? <span class="emoji">&#128519;</span></h1>
@@ -275,9 +275,9 @@
       'yummy.jpg'
     ];
 
-    const carelessWhisperSound = new Audio('assets/sounds/careless_whispers.mp3');
-    const meowSound = new Audio('assets/sounds/Meow.mp3');
-    const helloDarknessMyOldFriendSound = new Audio('assets/sounds/hellodarknessmyoldfriend.mp3')
+    const carelessWhisperSound = new Audio('./assets/sounds/careless_whispers.mp3');
+    const meowSound = new Audio('./assets/sounds/Meow.mp3');
+    const helloDarknessMyOldFriendSound = new Audio('./assets/sounds/hellodarknessmyoldfriend.mp3')
 
     function getPictureDisplayInnerHTML(imagePath) {
       console.log(imagePath)
@@ -302,7 +302,7 @@
     const randomIndex = Math.floor(Math.random() * images.length);
     const selectedImage = images[randomIndex];
 
-    const imagePath = `assets/images/${selectedImage}`;
+    const imagePath = `./assets/images/${selectedImage}`;
 
     const overlay = document.createElement('div');
     overlay.style = "position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.8); display:flex; justify-content:center; align-items:center; z-index:1000;";
@@ -425,7 +425,7 @@ randomImageSelector.addEventListener("click", selectRandomImage);
     });
 
     function thisIsReallyDissapointing(){
-    const imagePath = `assets/images/SadPenguin.jpg`;
+    const imagePath = `./assets/images/SadPenguin.jpg`;
 
     const overlay = document.createElement('div');
     overlay.style = "position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.8); display:flex; justify-content:center; align-items:center; z-index:1000;";
