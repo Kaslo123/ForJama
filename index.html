@@ -65,17 +65,91 @@
       fill: #3B2D2A; 
   }
 
-    #cuteCat:hover .st0 {
-        fill: #d88ac7; 
-    }
+  #cuteCat:hover .st0 {
+      fill: #d88ac7; 
+  }
 
-    #cuteCat:active {
-      transform: scale(0.8, 1.2); /* Squishes it vertically */
-      transition: transform 0.1s;
-    } 
+  #cuteCat:active {
+    transform: scale(0.8, 1.2); /* Squishes it vertically */
+    transition: transform 0.1s;
+  } 
 
+  @keyframes pulse-red {
+  0% { transform: scale(1); filter: drop-shadow(0 0 5px red); }
+  50% { transform: scale(1.1); filter: drop-shadow(0 0 20px red); }
+  100% { transform: scale(1); filter: drop-shadow(0 0 5px red); }
+}
+
+
+#sadCat {
+  position: fixed;   /* Removes it from the flow so it floats */
+  top: -50px;         /* 10px away from the top */
+  left: -30px;        /* 10px away from the left */
+  width: 270px;       /* Make it small */
+  height: auto;      /* Maintain aspect ratio */
+  z-index: 500;      /* Keep it above text, but below your 1000 z-index overlay */
+  opacity: 0;      /* Optional: makes it look a bit more "UI-like" and less intrusive */
+  pointer-events: none; /* Optional: lets you click "through" the cat if it's blocking a button */
+}
+
+#sadCatButt {
+  position: fixed;   /* Removes it from the flow so it floats */
+  bottom: -10px;         /* 10px away from the top */
+  right: 0px;        /* 10px away from the left */
+  width: 200px;       /* Make it small */
+  height: auto;      /* Maintain aspect ratio */
+  z-index: 500;      /* Keep it above text, but below your 1000 z-index overlay */
+  opacity: 0;      /* Optional: makes it look a bit more "UI-like" and less intrusive */
+  pointer-events: none; /* Optional: lets you click "through" the cat if it's blocking a button */
+}
+
+@keyframes evil-shake {
+  0% { transform: translate(0, 0) rotate(0deg); }
+  25% { transform: translate(2px, 1px) rotate(1deg); }
+  50% { transform: translate(-1px, -2px) rotate(-1deg); }
+  75% { transform: translate(1px, 2px) rotate(0deg); }
+  100% { transform: translate(0, 0) rotate(0deg); }
+}
+
+#sadCat.is-evil, #sadCatButt.is-evil {
+  animation: evil-shake 0.2s infinite; 
+  transition: filter 0.5s ease;
+}
+#cuteCat.is-evil {
+  animation: evil-shake 0.1s infinite; 
+  transition: filter 0.5s ease;
+}
+
+/* Make the trigger element look clickable */
+.trigger-area {
+  cursor: pointer;
+}
+
+.cute-popup {
+  position: absolute;
+  padding: 15px 25px;
+  background-color: #ffdeeb; /* Soft Pink */
+  color: #d63384;            /* Deeper Pink for text */
+  border-radius: 20px;       /* Super rounded edges */
+  font-family: 'Fredoka', sans-serif;
+  font-weight: 500;
+  box-shadow: 0 8px 15px rgba(255, 182, 193, 0.4);
+  pointer-events: none;      /* So it doesn't block future clicks */
+  z-index: 9999;
+  
+  /* Animation: Fade in and float up */
+  animation: popUpFade 0.6s ease-out forwards;
+}
+
+.fireworks{
+  cursor: pointer;
+}
+
+@keyframes popUpFade {
+  0% { opacity: 0; transform: translateY(10px) scale(0.8); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
     .art {
-
   width: 20px; 
   height:20px;
   position: relative;
@@ -171,13 +245,18 @@
 }
 
 .emoji {
-  /* You can make the emoji bounce separately! */
   display: inline-block;
+  transition: all 0.3s ease;
+  cursor: crosshair;
 }
 
-.emoji:hover{
-  animation: heartBeat 1.5s infinite;
+.emoji.is-evil {
+  animation: pulse-red 2s infinite ease-in-out;
+  cursor: pointer;
+}
 
+.emoji:not(.is-evil):hover {
+  animation: heartBeat 1.5s infinite;
 }
 
 @keyframes heartBeat {
@@ -186,15 +265,20 @@
   100% { transform: scale(1); }
 }
   </style>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300..700&display=swap" rel="stylesheet">
 </head>
 
 <body>
   <canvas id="confettiCanvas"></canvas>
 
   <main class="card">
+    
+    
+    <img id="sadCat" src="./assets/images/SadCat.png"></img>    
+    <img id="sadCatButt" src="./assets/images/SadCatButt.png"></img>
     <svg id="cuteCat" >
   <use href="./assets/svg/valentines-day-cute-kitty.svg#cuteCat"></use>
-</svg>
+    </svg>
 
     <h1 class="valentineStyle">Jama, will you be my valentine? <span class="emoji">&#128519;</span></h1>
 
@@ -266,13 +350,23 @@
     const hint = document.getElementById("hint");
     const randomImageSelector = document.getElementById("randomImageSelector");
     const cuteCat = document.getElementById("cuteCat");
-
+    const sadCat = document.getElementById("sadCat");
+    const sadCatButt = document.getElementById("sadCatButt");
+    const fireworksImage = document.querySelector(".fireworks");
+    console.log(fireworksImage);
     // 1. List your images manually here
-    const images = [
-      'MayITouchYou.jpg',
+    const cuteImages = [
       'StopLookingCute.jpg',
       'mwhehehehe.jpg',
-      'yummy.jpg'
+      'Usss.jpg',
+      'CuteSleepingTogether.jpg'
+    ];
+
+    const spicyImages = [
+      'yummy.jpg',
+      'MayITouchYou.jpg',
+      'SmackButt.jpg',
+      'BellyPic.jpg' 
     ];
 
     const carelessWhisperSound = new Audio('./assets/sounds/careless_whispers.mp3');
@@ -298,10 +392,14 @@
       `;
     }
 
-  function selectRandomImage() {
+  function selectRandomImage(images) {
     const randomIndex = Math.floor(Math.random() * images.length);
     const selectedImage = images[randomIndex];
 
+    createImageOverlay(selectedImage);
+  }
+
+  function createImageOverlay(selectedImage){
     const imagePath = `./assets/images/${selectedImage}`;
 
     const overlay = document.createElement('div');
@@ -318,9 +416,11 @@
         meowSound.play();
   }
 
-cuteCat.addEventListener("click", meow)
+    cuteCat.addEventListener("click", meow)
 
-randomImageSelector.addEventListener("click", selectRandomImage);
+    randomImageSelector.addEventListener("click", () => {
+        selectRandomImage(cuteImages);
+    });
 
     /* ---------- CONFETTI ---------- */
     const confettiCanvas = document.getElementById("confettiCanvas");
@@ -335,17 +435,85 @@ randomImageSelector.addEventListener("click", selectRandomImage);
 
     carelessWhisperSound.loop = true;
     const emoji = document.querySelector('.emoji');
-
+    const devilCarelessWhisperPlaybackRate = 0.70;
+    const angelCarelessWhisperPlaybackRate = 1.05;
     emoji.addEventListener('mouseenter', () => {
-      carelessWhisperSound.playbackRate = 0.8 + Math.random() * 0.4; 
+      if (emoji.innerHTML === '😇') {
+        carelessWhisperSound.playbackRate = angelCarelessWhisperPlaybackRate;
+      } else if (emoji.innerHTML === '😈') {
+        carelessWhisperSound.playbackRate = devilCarelessWhisperPlaybackRate;
+      }
+      
       carelessWhisperSound.currentTime = 0;
       carelessWhisperSound.play();
     });
 
     emoji.addEventListener('mouseleave', () => {
-        carelessWhisperSound.pause();
+        if (emoji.innerHTML === '😇') {
+          carelessWhisperSound.pause();     
+        }
     });
 
+    let emojiClickCounter = 0;
+    
+
+    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    const track = audioCtx.createMediaElementSource(carelessWhisperSound);
+
+    // Create a Filter (The "Secret Sauce")
+    const devilFilter = audioCtx.createBiquadFilter();
+    devilFilter.type = "lowpass"; 
+    devilFilter.frequency.value = 20000; // Start at max (normal sound)
+
+    // Connect everything: Track -> Filter -> Speakers
+    track.connect(devilFilter);
+    devilFilter.connect(audioCtx.destination);
+
+    emoji.addEventListener('click', () => {
+      // Resume context (browsers require this on user click)
+      if (audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
+
+      if (emoji.innerHTML === '😇') {
+        emoji.innerHTML = '😈';
+        emoji.classList.add('is-evil');
+        cuteCat.classList.add('is-evil');
+        sadCat.classList.add('is-evil');
+        sadCatButt.classList.add('is-evil');
+        carelessWhisperSound.playbackRate = devilCarelessWhisperPlaybackRate; 
+        devilFilter.frequency.setValueAtTime(950, audioCtx.currentTime); 
+        
+        carelessWhisperSound.play();
+      } else if (emoji.innerHTML === '😈') {
+
+        emojiClickCounter += 1;
+        
+        if (emojiClickCounter % 5 == 1){
+
+          createImageOverlay(spicyImages[0]);
+        }
+        if (emojiClickCounter % 5 == 2){
+          createImageOverlay(spicyImages[1]);
+        }
+        if (emojiClickCounter % 5 == 3){
+          createImageOverlay(spicyImages[2]);
+        }
+        if (emojiClickCounter % 5 == 4){
+          createImageOverlay(spicyImages[3]);
+        }
+
+        if (emojiClickCounter % 5 == 0) {
+          emoji.innerHTML = '😇';
+          emoji.classList.remove('is-evil');
+          cuteCat.classList.remove('is-evil');
+          sadCat.classList.remove('is-evil');          
+          sadCatButt.classList.remove('is-evil');
+          devilFilter.frequency.setValueAtTime(20000, audioCtx.currentTime);
+          carelessWhisperSound.playbackRate = angelCarelessWhisperPlaybackRate;
+        }
+      }
+    });
     resizeConfettiCanvas();
     window.addEventListener("resize", resizeConfettiCanvas);
     window.addEventListener("orientationchange", () => setTimeout(resizeConfettiCanvas, 150));
@@ -425,25 +593,33 @@ randomImageSelector.addEventListener("click", selectRandomImage);
     });
 
     function thisIsReallyDissapointing(){
-    const imagePath = `./assets/images/SadPenguin.jpg`;
+      const imagePath = `./assets/images/SadPenguin.jpg`;
 
-    const overlay = document.createElement('div');
-    overlay.style = "position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.8); display:flex; justify-content:center; align-items:center; z-index:1000;";
-    
-    overlay.innerHTML = getPictureDisplayInnerHTML(imagePath);
-    overlay.onclick = () => overlay.remove();
-    
-    document.body.appendChild(overlay);
-    helloDarknessMyOldFriendSound.currentTime = 0;
-    helloDarknessMyOldFriendSound.play();
-    yesScale = 1;
-    yesBtn.style.transform = `translateY(-50%) scale(${yesScale}})`;
+      const overlay = document.createElement('div');
+      overlay.style = "position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.8); display:flex; justify-content:center; align-items:center; z-index:1000;";
+      
+      overlay.innerHTML = getPictureDisplayInnerHTML(imagePath);
+      overlay.onclick = () => {
+        sadCatButt.style.opacity = "1";
+        sadCat.style.opacity = "0.93";
+        overlay.remove();
+      }
+      
+      document.body.appendChild(overlay);
+      helloDarknessMyOldFriendSound.currentTime = 0;
+      
+      helloDarknessMyOldFriendSound.play();
+      carelessWhisperSound.pause();
+      yesScale = 1;
+      yesBtn.style.transform = `translateY(-50%) scale(${yesScale}})`;
     }
 
     noBtn.addEventListener("click", thisIsReallyDissapointing);
 
     /* ---------- YES CLICK ---------- */
     yesBtn.addEventListener("click", () => {
+      sadCatButt.style.opacity = "0";
+      sadCat.style.opacity = "0";
       zone.style.display = "none";
       hint.style.display = "none";   
       result.style.display = "block";
@@ -458,6 +634,43 @@ randomImageSelector.addEventListener("click", selectRandomImage);
         carelessWhisperSound.pause();
     }, loopDuration);
     });
+
+    // You can attach this to the whole window or a specific element
+  fireworksImage.addEventListener('click', (event) => {
+      createCutePopup(event.pageX, event.pageY);
+  });
+
+
+const compliments = [
+  "Thanks for being sooo kind and sweet!✨",
+  "Hey cutieeee!😘",
+  "I am really happy you're my valentine :)",
+  "I hope you liked what I made for you, janym💖"
+]
+
+var cutePopupClickCounter = 0;
+function createCutePopup(x, y) {
+    const popup = document.createElement('div');
+    popup.className = 'cute-popup';
+    
+    var text = compliments[cutePopupClickCounter % compliments.length]
+    popup.innerText = text;
+
+    // Position it at the mouse coordinates
+    // We subtract a bit from x/y to center it on the cursor
+    popup.style.left = `${x - 50}px`;
+    popup.style.top = `${y - 40}px`;
+
+    document.body.appendChild(popup);
+    cutePopupClickCounter += 1;
+
+    // Remove the popup after 2 seconds so they don't clutter the screen
+    setTimeout(() => {
+        popup.style.transition = "opacity 0.5s ease";
+        popup.style.opacity = "0";
+        setTimeout(() => popup.remove(), 500);
+    }, 2000);
+}
 
   </script>
 </body>
