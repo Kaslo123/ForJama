@@ -264,6 +264,36 @@
   50% { transform: scale(1.2); }
   100% { transform: scale(1); }
 }
+
+/* Unique class name to prevent interference */
+.spinning-compliment-box {
+    position: absolute;
+    background: #fff0f6;
+    border: 2px solid #ffdeeb;
+    padding: 12px 18px;
+    border-radius: 30px;
+    box-shadow: 0 4px 15px rgba(255, 182, 193, 0.4);
+    color: #ff4d94;
+    font-family: 'Arial', sans-serif;
+    font-weight: bold;
+    pointer-events: none;
+    z-index: 2000; /* High z-index to stay on top */
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    white-space: nowrap;
+}
+
+/* Specific animation name for this logic */
+.text-flip-animation {
+    display: inline-block;
+    animation: flip-vertical 0.4s ease-out;
+}
+
+@keyframes flip-vertical {
+    0% { transform: rotateX(-90deg); opacity: 0; }
+    100% { transform: rotateX(0deg); opacity: 1; }
+}
   </style>
   <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300..700&display=swap" rel="stylesheet">
 </head>
@@ -616,35 +646,13 @@
 
     noBtn.addEventListener("click", thisIsReallyDissapointing);
 
-    /* ---------- YES CLICK ---------- */
-    yesBtn.addEventListener("click", () => {
-      sadCatButt.style.opacity = "0";
-      sadCat.style.opacity = "0";
-      zone.style.display = "none";
-      hint.style.display = "none";   
-      result.style.display = "block";
-      resizeConfettiCanvas();
-      fullScreenConfetti();
-      
-      const loopDuration = Date.now() + 2 * 60 * 1000; //2 minutes
-      carelessWhisperSound.play();
-
-      setTimeout(() => {
-        carelessWhisperSound.loop = false;
-        carelessWhisperSound.pause();
-    }, loopDuration);
-    });
-
-    // You can attach this to the whole window or a specific element
-  fireworksImage.addEventListener('click', (event) => {
-      createCutePopup(event.pageX, event.pageY);
-  });
-
-
 const compliments = [
-  "Thanks for being sooo kind and sweet!✨",
   "Hey cutieeee!😘",
+  "Thanks for being sooo kind and sweet!✨",
   "I am really happy you're my valentine :)",
+  "Do you remember you said that you worried about doing things 'right'?",
+  "I want to tell you that you have been doing everything 'right'!",
+  "I am just really happy that you have come into my life, милая Jama🥰",
   "I hope you liked what I made for you, janym💖"
 ]
 
@@ -671,6 +679,89 @@ function createCutePopup(x, y) {
         setTimeout(() => popup.remove(), 500);
     }, 2000);
 }
+
+  // Renamed variables to ensure total isolation
+  var attributeLoopList = ["Eyes", "Smile", "Dimples", "Body", "Kindness", "Honesty", "Humor", "Stories", "Style", "Values", "Eyebrows", "Cuteness", "Enthousiasm"];
+  var attributeLoopCounter = 0;
+
+  function createSpinningComplimentPopup(x, y) {
+      const popupContainer = document.createElement('div');
+      popupContainer.className = 'spinning-compliment-box';
+      
+      // Static text part
+      const introSpan = document.createElement('span');
+      introSpan.innerText = "I like your ";
+      popupContainer.appendChild(introSpan);
+
+      // The part that changes
+      const changingWordSpan = document.createElement('span');
+      changingWordSpan.className = 'text-flip-animation';
+      popupContainer.appendChild(changingWordSpan);
+
+      const shuffledAttributes = [...attributeLoopList].sort(() => Math.random() - 0.5);
+
+      // Determine the starting word based on the global counter
+      let localWordIndex = attributeLoopCounter % shuffledAttributes.length;
+      changingWordSpan.innerText = shuffledAttributes[localWordIndex];
+
+      // Position settings
+      popupContainer.style.left = `${x - 60}px`;
+      popupContainer.style.top = `${y - 50}px`;
+      document.body.appendChild(popupContainer);
+      const complimentTime = 250;
+      const loopTimer = setInterval(() => {
+          localWordIndex = (localWordIndex + 1) % shuffledAttributes.length;
+          changingWordSpan.innerText = shuffledAttributes[localWordIndex];
+          
+          // Restart the CSS animation for each new word
+          changingWordSpan.style.animation = 'none';
+          changingWordSpan.offsetHeight; /* Trigger reflow */
+          changingWordSpan.style.animation = null; 
+      }, complimentTime);
+
+      // Increment the global counter for the next time the function is called
+      attributeLoopCounter += 1;
+
+      // Cleanup logic
+      setTimeout(() => {
+          clearInterval(loopTimer); // Stop the loop
+          popupContainer.style.transition = "opacity 0.6s ease, transform 0.6s ease";
+          popupContainer.style.opacity = "0";
+          popupContainer.style.transform = "scale(0.8)"; 
+          
+          setTimeout(() => popupContainer.remove(), 600);
+      }, complimentTime * shuffledAttributes.length);
+  }
+          /* ---------- YES CLICK ---------- */
+    yesBtn.addEventListener("click", () => {
+      sadCatButt.style.opacity = "0";
+      sadCat.style.opacity = "0";
+      zone.style.display = "none";
+      hint.style.display = "none";   
+      result.style.display = "block";
+      resizeConfettiCanvas();
+      fullScreenConfetti();
+      
+      const loopDuration = Date.now() + 2 * 60 * 1000; //2 minutes
+      carelessWhisperSound.play();
+
+      setTimeout(() => {
+        carelessWhisperSound.loop = false;
+        carelessWhisperSound.pause();
+    }, loopDuration);
+
+
+      cuteCat.addEventListener('click', (event) => {
+      createSpinningComplimentPopup(event.pageX, event.pageY);
+
+    });
+
+    // You can attach this to the whole window or a specific element
+  fireworksImage.addEventListener('click', (event) => {
+      createCutePopup(event.pageX, event.pageY);
+  });
+
+  });
 
   </script>
 </body>
